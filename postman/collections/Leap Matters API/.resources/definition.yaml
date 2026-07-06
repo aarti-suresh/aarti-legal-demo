@@ -1,0 +1,14 @@
+$kind: collection
+name: Leap Matters API
+description: |-
+  Public API for retrieving legal matter details from the LEAP Dev platform. Designed for third-party integrators and internal teams.
+
+  Contact Support:
+   Name: LEAP Dev API Support
+   Email: api-support@leapdev.com
+variables:
+  baseUrl: https://api.leapdev.com/v1
+auth:
+  type: bearer
+  credentials:
+    token: "123456"

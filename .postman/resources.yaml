@@ -1,0 +1,9 @@
+workspace:
+  id: 66da593d-d7f8-4b6a-b92c-c93d441105e2
+cloudResources:
+  collections:
+    ../postman/collections/Leap Matters API: 52855131-45c30eca-2f8c-4992-b367-ae953951e0d0
+  specs:
+    ../postman/specs/leap-matters-api.yaml: 270c8b3e-b355-437d-8c19-1c7a9952dc82
+  environments:
+    ../postman/environments/Leap Matters Mock.environment.yaml: 52855131-7aa2b2f1-27c3-4ea5-9545-a4fa63a70e4c

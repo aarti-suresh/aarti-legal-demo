@@ -1,0 +1,15 @@
+{
+  "id": "019f35e7-9df0-743f-b973-93270839fe7d",
+  "version": 1,
+  "name": "leap-matters",
+  "slug": "leap-matters",
+  "enableSession": true,
+  "protocol": "http",
+  "port": 4500,
+  "mockSrc": "./mock-1.js",
+  "autoRestartOnChange": true,
+  "logging": {
+    "level": "verbose",
+    "showBody": true
+  }
+}

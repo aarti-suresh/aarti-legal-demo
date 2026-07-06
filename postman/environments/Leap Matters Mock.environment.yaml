@@ -1,0 +1,13 @@
+owner: "52855131"
+team: "13347347"
+lastUpdatedBy: "52855131"
+lastRevision: 1783311404000
+name: Leap Matters Mock
+color: null
+values:
+  - key: baseUrl
+    value: https://a3db4064-4a9f-4db7-b401-659f347297de.mock.pstmn.io
+    enabled: true
+    description: This is a mock environment
+createdAt: 2026-07-06T03:50:01.000Z
+updatedAt: 2026-07-06T04:16:44.000Z
