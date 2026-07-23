@@ -104,10 +104,13 @@ jobs:
 
       - name: Migrate collection to v3 YAML format
         run: |
-          # Remove the existing v3 folder so migrate writes a clean copy
-          rm -rf postman/collections/Leap\ Matters\ API
+          # Migrate into a fresh temp dir (migrate requires an empty output dir)
+          rm -rf /tmp/postman-migrate-out && mkdir /tmp/postman-migrate-out
           postman collection migrate /tmp/collection-raw.json \
-            --output postman/collections
+            --output /tmp/postman-migrate-out
+          # Replace the existing collection folder with the freshly migrated one
+          rm -rf postman/collections/Leap\ Matters\ API
+          cp -r /tmp/postman-migrate-out/. postman/collections/
 
       # ── Step 6: Commit generated spec + v3 collection back to repo ───────────
       - name: Commit updated spec and collection to repo
