@@ -42,7 +42,7 @@ jobs:
           SPEC_CONTENT=$(python3 -c "
           import json
           content = open('postman/specs/leap-matters-api.yaml').read()
-          print(json.dumps({'name': 'leap-matters-api.yaml', 'content': content}))
+          print(json.dumps({'content': content}))
           ")
 
           HTTP_STATUS=$(curl --silent --output /tmp/spec-response.json --write-out "%{http_code}" \
