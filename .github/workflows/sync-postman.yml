@@ -9,6 +9,8 @@ on:
 jobs:
   sync-postman:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repo
@@ -109,8 +111,13 @@ jobs:
           postman collection migrate /tmp/collection-raw.json \
             --output /tmp/postman-migrate-out
           # Replace the existing collection folder with the freshly migrated one
-          rm -rf postman/collections/Leap\ Matters\ API
+          rm -rf "postman/collections/Leap Matters API"
           cp -r /tmp/postman-migrate-out/. postman/collections/
+          # Rename the migrated folder to match the original collection folder name
+          MIGRATED_FOLDER=$(ls /tmp/postman-migrate-out/)
+          if [ -n "$MIGRATED_FOLDER" ] && [ "$MIGRATED_FOLDER" != "Leap Matters API" ]; then
+            mv "postman/collections/$MIGRATED_FOLDER" "postman/collections/Leap Matters API"
+          fi
 
       # ── Step 6: Commit generated spec + v3 collection back to repo ───────────
       - name: Commit updated spec and collection to repo
