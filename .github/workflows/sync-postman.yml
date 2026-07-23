@@ -43,11 +43,11 @@ jobs:
           SPEC_CONTENT=$(python3 -c "
           import json
           content = open('postman/specs/leap-matters-api.yaml').read()
-          print(json.dumps({'content': content}))
+          print(json.dumps({'name': 'leap-matters-api.yaml', 'content': content}))
           ")
 
           HTTP_STATUS=$(curl --silent --output /tmp/spec-response.json --write-out "%{http_code}" \
-            -X PATCH "https://api.postman.com/specs/${{ vars.POSTMAN_SPEC_ID }}/files/${{ vars.POSTMAN_SPEC_FILE_PATH }}" \
+            -X PATCH "https://api.postman.com/specs/${{ secrets.POSTMAN_SPEC_ID }}/files/${{ secrets.POSTMAN_SPEC_FILE_PATH }}" \
             -H "x-api-key: ${{ secrets.POSTMAN_API_KEY }}" \
             -H "Content-Type: application/json" \
             -d "$SPEC_CONTENT")
@@ -84,7 +84,7 @@ jobs:
           "
 
           HTTP_STATUS=$(curl --silent --output /tmp/collection-response.json --write-out "%{http_code}" \
-            -X PUT "https://api.postman.com/collections/${{ vars.POSTMAN_COLLECTION_ID }}" \
+            -X PUT "https://api.postman.com/collections/${{ secrets.POSTMAN_COLLECTION_ID }}" \
             -H "x-api-key: ${{ secrets.POSTMAN_API_KEY }}" \
             -H "Content-Type: application/json" \
             -d @/tmp/collection-wrapped.json)
