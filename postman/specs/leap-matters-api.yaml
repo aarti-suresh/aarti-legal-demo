@@ -1,122 +1,29 @@
 openapi: 3.0.3
 info:
   title: LEAP Dev - Matters API
-  description: >-
-    Public API for retrieving legal matter details from the LEAP Dev platform.
-    Designed for third-party integrators and internal teams.
+  description: Public API for retrieving legal matter details from the LEAP Dev platform. Designed for third-party integrators and internal teams.
   version: 1.0.0
   contact:
     name: LEAP Dev API Support
     email: api-support@leapdev.com
-
 servers:
   - url: https://api.leapdev.com/v1
     description: Production server
-
-security:
-  - BearerAuth: []
-
 tags:
   - name: Matters
     description: Operations related to legal matters.
-
-paths:
-  /matters/{matterId}:
-    get:
-      summary: Get matter by ID
-      description: >-
-        Retrieves the full details of a legal matter identified by its unique
-        matter ID. Supports all matter types including Conveyancing, Family,
-        Commercial, and more.
-      operationId: getMatterById
-      tags:
-        - Matters
-      parameters:
-        - name: matterId
-          in: path
-          required: true
-          description: The unique identifier of the matter (e.g. MTR-00123).
-          schema:
-            $ref: '#/components/schemas/MatterId'
-      responses:
-        '200':
-          description: Matter found and returned successfully.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Matter'
-              examples:
-                conveyancing-matter:
-                  summary: '200 — Conveyancing matter'
-                  value:
-                    matterId: MTR-00123
-                    matterType: Conveyancing
-                    status: Open
-                    clientName: Jane Smith
-                    assignedLawyer: Robert Hughes
-                    createdAt: '2026-03-15T09:00:00Z'
-                family-law-matter:
-                  summary: '200 — Family law matter'
-                  value:
-                    matterId: MTR-00456
-                    matterType: Family
-                    status: Pending
-                    clientName: Mark and Lisa Brennan
-                    assignedLawyer: Sarah Okafor
-                    createdAt: '2026-05-01T10:15:00Z'
-        '401':
-          description: Unauthorised. A valid Bearer token is required.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                unauthorised:
-                  summary: '401 — Unauthorised'
-                  value:
-                    code: 401
-                    message: Unauthorised. A valid Bearer token is required.
-        '404':
-          description: Matter not found.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                matter-not-found:
-                  summary: '404 — Matter not found'
-                  value:
-                    code: 404
-                    message: Matter MTR-99999 was not found.
-        '500':
-          description: Internal server error.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              examples:
-                server-error:
-                  summary: '500 — Server error'
-                  value:
-                    code: 500
-                    message: An unexpected error occurred. Please try again later.
-
 components:
   securitySchemes:
     BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: >-
-        Provide a valid JWT Bearer token in the Authorization header.
-        Example: Authorization: Bearer <token>
-
+      description: 'Provide a valid JWT Bearer token in the Authorization header. Example: Authorization: Bearer <token>'
   schemas:
     MatterId:
       type: string
       description: Unique identifier of a legal matter.
       example: MTR-00123
-
     Matter:
       type: object
       description: Represents a legal matter in the LEAP Dev system.
@@ -164,7 +71,6 @@ components:
           format: date-time
           description: ISO 8601 timestamp of when the matter was created.
           example: '2026-03-15T09:00:00Z'
-
     ErrorResponse:
       type: object
       description: Standard error response returned for 4xx and 5xx status codes.
@@ -180,3 +86,84 @@ components:
           type: string
           description: Human-readable error message.
           example: Matter MTR-99999 was not found.
+security:
+  - BearerAuth: []
+paths:
+  /matters/{matterId}:
+    get:
+      summary: Get matter by ID
+      description: Retrieves the full details of a legal matter identified by its unique matter ID. Supports all matter types including Conveyancing, Family, Commercial, and more.
+      operationId: getMatterById
+      tags:
+        - Matters
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: matterId
+          in: path
+          required: true
+          description: The unique identifier of the matter (e.g. MTR-00123).
+          schema:
+            $ref: '#/components/schemas/MatterId'
+      responses:
+        '200':
+          description: Matter found and returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Matter'
+              examples:
+                conveyancing-matter:
+                  summary: 200 — Conveyancing matter
+                  value:
+                    matterId: MTR-00123
+                    matterType: Conveyancing
+                    status: Open
+                    clientName: Jane Smith
+                    assignedLawyer: Robert Hughes
+                    createdAt: '2026-03-15T09:00:00Z'
+                family-law-matter:
+                  summary: 200 — Family law matter
+                  value:
+                    matterId: MTR-00456
+                    matterType: Family
+                    status: Pending
+                    clientName: Mark and Lisa Brennan
+                    assignedLawyer: Sarah Okafor
+                    createdAt: '2026-05-01T10:15:00Z'
+        '401':
+          description: Unauthorised. A valid Bearer token is required.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                unauthorised:
+                  summary: 401 — Unauthorised
+                  value:
+                    code: 401
+                    message: Unauthorised. A valid Bearer token is required.
+        '404':
+          description: Matter not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                matter-not-found:
+                  summary: 404 — Matter not found
+                  value:
+                    code: 404
+                    message: Matter MTR-99999 was not found.
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                server-error:
+                  summary: 500 — Server error
+                  value:
+                    code: 500
+                    message: An unexpected error occurred. Please try again later.

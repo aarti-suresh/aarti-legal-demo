@@ -1,0 +1,20 @@
+$kind: http-request
+id: 28cdb7c1-5b87-4304-8f75-c3b47fb73d7a
+description: Retrieves the full details of a legal matter identified by its unique matter ID. Supports all matter types including Conveyancing, Family, Commercial, and more.
+url: "{{baseUrl}}/matters/:matterId"
+method: GET
+headers:
+  Accept: application/json
+pathVariables:
+  - key: matterId
+    value: <string>
+    description: (Required) The unique identifier of the matter (e.g. MTR-00123).
+body:
+  type: text
+  content: ""
+auth:
+  type: bearer
+  credentials:
+    token: "{{bearerToken}}"
+examples: ./.resources/Get matter by ID.resources/examples
+order: 1000

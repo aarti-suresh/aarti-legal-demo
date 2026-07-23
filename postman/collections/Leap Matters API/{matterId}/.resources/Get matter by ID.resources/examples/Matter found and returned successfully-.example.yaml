@@ -1,0 +1,36 @@
+$kind: http-example
+id: bf48fe15-ece5-4659-b586-3dd5a63550af
+name: Matter found and returned successfully.
+request:
+  url: "{{baseUrl}}/matters/:matterId"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: Bearer <token>
+      description: "Added as a part of security scheme: bearer"
+  pathVariables:
+    - key: matterId
+      value: <string>
+      description: (Required) The unique identifier of the matter (e.g. MTR-00123).
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 200
+  statusText: OK
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "matterId": "<string>",
+        "matterType": "Conveyancing",
+        "status": "Open",
+        "clientName": "<string>",
+        "assignedLawyer": "<string>",
+        "createdAt": "<dateTime>"
+      }
+order: 1000

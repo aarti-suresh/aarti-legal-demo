@@ -1,0 +1,32 @@
+$kind: http-example
+id: 1967e278-3a1a-4829-bd26-78fdb2348eac
+name: Matter not found.
+request:
+  url: "{{baseUrl}}/matters/:matterId"
+  method: GET
+  headers:
+    - key: Accept
+      value: application/json
+    - key: Authorization
+      value: Bearer <token>
+      description: "Added as a part of security scheme: bearer"
+  pathVariables:
+    - key: matterId
+      value: <string>
+      description: (Required) The unique identifier of the matter (e.g. MTR-00123).
+  body:
+    type: text
+    content: ""
+response:
+  statusCode: 404
+  statusText: Not Found
+  headers:
+    Content-Type: application/json
+  body:
+    type: json
+    content: |-
+      {
+        "code": "<integer>",
+        "message": "<string>"
+      }
+order: 3000
