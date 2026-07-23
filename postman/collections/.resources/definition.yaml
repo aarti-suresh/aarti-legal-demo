@@ -1,5 +1,5 @@
 $kind: collection
-id: 1882f91d-7d20-4260-ae6b-a4b84b2cf9c6
+id: 2cb01edc-8d9f-4b7a-be77-f8aba278afb8
 name: LEAP Dev - Matters API
 description: |-
   Public API for retrieving legal matter details from the LEAP Dev platform. Designed for third-party integrators and internal teams.
@@ -10,7 +10,7 @@ description: |-
 variables:
   baseUrl: https://api.leapdev.com/v1
 auth:
-  - id: bea53ea8-078d-4046-abb6-3930a3e917e8
+  - id: 1d86c69e-df4a-420d-aeca-f3f2b217df13
     type: bearer
     name: bearer auth
     credentials:

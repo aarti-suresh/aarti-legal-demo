@@ -1,5 +1,5 @@
 $kind: http-example
-id: bf48fe15-ece5-4659-b586-3dd5a63550af
+id: 8eb06d5e-2f0d-46a5-9aad-b4515d7663af
 name: Matter found and returned successfully.
 request:
   url: "{{baseUrl}}/matters/:matterId"
@@ -27,10 +27,11 @@ response:
     content: |-
       {
         "matterId": "<string>",
-        "matterType": "Conveyancing",
-        "status": "Open",
+        "matterType": "Other",
+        "status": "Pending",
         "clientName": "<string>",
         "assignedLawyer": "<string>",
-        "createdAt": "<dateTime>"
+        "createdAt": "<dateTime>",
+        "matterDescription": "<string>"
       }
 order: 1000
