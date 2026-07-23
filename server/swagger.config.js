@@ -80,6 +80,11 @@ module.exports = {
               description: 'ISO 8601 timestamp of when the matter was created.',
               example: '2026-03-15T09:00:00Z',
             },
+            matterDescription: {
+              type: 'string',
+              description: 'A human-readable summary of the legal matter, including key details and context.',
+              example: 'Residential property purchase for Jane Smith at 14 Maple Grove, Sydney. Includes title search, contract review, and settlement coordination.',
+            },
           },
         },
         ErrorResponse: {

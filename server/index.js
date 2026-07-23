@@ -13,6 +13,7 @@ const matters = {
     clientName: 'Jane Smith',
     assignedLawyer: 'Robert Hughes',
     createdAt: '2026-03-15T09:00:00Z',
+    matterDescription: 'Residential property purchase for Jane Smith at 14 Maple Grove, Sydney. Includes title search, contract review, and settlement coordination.',
   },
   'MTR-00456': {
     matterId: 'MTR-00456',
@@ -21,6 +22,7 @@ const matters = {
     clientName: 'Michael Torres',
     assignedLawyer: 'Sarah Lawson',
     createdAt: '2026-04-10T11:30:00Z',
+    matterDescription: 'Divorce proceedings for Michael Torres. Covers asset division, spousal maintenance negotiations, and parenting arrangements for two dependent children.',
   },
   'MTR-00789': {
     matterId: 'MTR-00789',
@@ -29,6 +31,7 @@ const matters = {
     clientName: 'Apex Corp Ltd',
     assignedLawyer: 'David Chen',
     createdAt: '2025-11-20T08:00:00Z',
+    matterDescription: 'Commercial lease dispute for Apex Corp Ltd regarding a retail premises in Melbourne CBD. Matter resolved via mediation with a revised lease agreement executed.',
   },
 };
 
@@ -82,6 +85,7 @@ function requireBearerToken(req, res, next) {
  *                   clientName: Jane Smith
  *                   assignedLawyer: Robert Hughes
  *                   createdAt: '2026-03-15T09:00:00Z'
+ *                   matterDescription: 'Residential property purchase for Jane Smith at 14 Maple Grove, Sydney. Includes title search, contract review, and settlement coordination.'
  *               family-law-matter:
  *                 summary: '200 — Family law matter'
  *                 value:
@@ -91,6 +95,7 @@ function requireBearerToken(req, res, next) {
  *                   clientName: Mark and Lisa Brennan
  *                   assignedLawyer: Sarah Okafor
  *                   createdAt: '2026-05-01T10:15:00Z'
+ *                   matterDescription: 'Divorce proceedings for Michael Torres. Covers asset division, spousal maintenance negotiations, and parenting arrangements for two dependent children.'
  *       '401':
  *         description: Unauthorised. A valid Bearer token is required.
  *         content:
