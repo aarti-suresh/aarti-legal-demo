@@ -1,11 +1,10 @@
 name: Sync Postman Spec and Collection
 
 on:
+  workflow_dispatch: # allows manual runs from the GitHub Actions tab
   push:
     branches:
       - main
-    paths:
-      - 'server/**'
 
 jobs:
   sync-postman:
