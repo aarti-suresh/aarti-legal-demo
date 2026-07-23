@@ -44,9 +44,90 @@ function requireBearerToken(req, res, next) {
   next();
 }
 
-// --- GET /matters/:matterId ---
-// Retrieves the full details of a legal matter identified by its unique matter ID.
-// Supports all matter types: Conveyancing, Family, Commercial, Criminal, Other.
+/**
+ * @openapi
+ * /matters/{matterId}:
+ *   get:
+ *     summary: Get matter by ID
+ *     description: >-
+ *       Retrieves the full details of a legal matter identified by its unique
+ *       matter ID. Supports all matter types including Conveyancing, Family,
+ *       Commercial, and more.
+ *     operationId: getMatterById
+ *     tags:
+ *       - Matters
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - name: matterId
+ *         in: path
+ *         required: true
+ *         description: The unique identifier of the matter (e.g. MTR-00123).
+ *         schema:
+ *           $ref: '#/components/schemas/MatterId'
+ *     responses:
+ *       '200':
+ *         description: Matter found and returned successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Matter'
+ *             examples:
+ *               conveyancing-matter:
+ *                 summary: '200 — Conveyancing matter'
+ *                 value:
+ *                   matterId: MTR-00123
+ *                   matterType: Conveyancing
+ *                   status: Open
+ *                   clientName: Jane Smith
+ *                   assignedLawyer: Robert Hughes
+ *                   createdAt: '2026-03-15T09:00:00Z'
+ *               family-law-matter:
+ *                 summary: '200 — Family law matter'
+ *                 value:
+ *                   matterId: MTR-00456
+ *                   matterType: Family
+ *                   status: Pending
+ *                   clientName: Mark and Lisa Brennan
+ *                   assignedLawyer: Sarah Okafor
+ *                   createdAt: '2026-05-01T10:15:00Z'
+ *       '401':
+ *         description: Unauthorised. A valid Bearer token is required.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             examples:
+ *               unauthorised:
+ *                 summary: '401 — Unauthorised'
+ *                 value:
+ *                   code: 401
+ *                   message: Unauthorised. A valid Bearer token is required.
+ *       '404':
+ *         description: Matter not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             examples:
+ *               matter-not-found:
+ *                 summary: '404 — Matter not found'
+ *                 value:
+ *                   code: 404
+ *                   message: Matter MTR-99999 was not found.
+ *       '500':
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *             examples:
+ *               server-error:
+ *                 summary: '500 — Server error'
+ *                 value:
+ *                   code: 500
+ *                   message: An unexpected error occurred. Please try again later.
+ */
 app.get('/matters/:matterId', requireBearerToken, (req, res) => {
   try {
     const { matterId } = req.params;

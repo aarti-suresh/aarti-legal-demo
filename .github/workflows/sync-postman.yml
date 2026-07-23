@@ -1,0 +1,122 @@
+name: Sync Postman Spec and Collection
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'server/**'
+
+jobs:
+  sync-postman:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      # ── Step 1: Generate spec from code ──────────────────────────────────────
+      # Reads @openapi JSDoc annotations in server/index.js and swagger.config.js,
+      # then writes the result to postman/specs/leap-matters-api.yaml
+      - name: Install server dependencies
+        working-directory: server
+        run: npm install
+
+      - name: Generate OpenAPI spec from code
+        working-directory: server
+        run: npm run generate:spec
+
+      # ── Step 2: Update the spec in Postman Spec Hub ──────────────────────────
+      # PATCH /specs/{specId}/files/{filePath}
+      # Requires:
+      #   Secret:   POSTMAN_API_KEY         → your Postman API key
+      #   Variable: POSTMAN_SPEC_ID         → 270c8b3e-b355-437d-8c19-1c7a9952dc82
+      #   Variable: POSTMAN_SPEC_FILE_PATH  → root file name inside the spec in Postman
+      #                                       (e.g. leap-matters-api.yaml)
+      - name: Update spec in Postman Spec Hub
+        run: |
+          SPEC_CONTENT=$(python3 -c "
+          import json
+          content = open('postman/specs/leap-matters-api.yaml').read()
+          print(json.dumps({'content': content}))
+          ")
+
+          HTTP_STATUS=$(curl --silent --output /tmp/spec-response.json --write-out "%{http_code}" \
+            -X PATCH "https://api.postman.com/specs/${{ vars.POSTMAN_SPEC_ID }}/files/${{ vars.POSTMAN_SPEC_FILE_PATH }}" \
+            -H "x-api-key: ${{ secrets.POSTMAN_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d "$SPEC_CONTENT")
+
+          echo "Spec update response (HTTP $HTTP_STATUS):"
+          cat /tmp/spec-response.json
+
+          if [ "$HTTP_STATUS" -lt 200 ] || [ "$HTTP_STATUS" -ge 300 ]; then
+            echo "ERROR: Spec update returned HTTP $HTTP_STATUS"
+            exit 1
+          fi
+
+      # ── Step 3: Convert spec → Postman Collection v2.1 JSON ──────────────────
+      - name: Install openapi-to-postmanv2
+        run: npm install -g openapi-to-postmanv2
+
+      - name: Convert spec to Postman collection
+        run: |
+          openapi2postmanv2 \
+            -s postman/specs/leap-matters-api.yaml \
+            -o /tmp/collection-raw.json \
+            -p
+
+      # ── Step 4: Update the collection in Postman cloud ────────────────────────
+      # PUT /collections/{collectionId}
+      # Requires:
+      #   Variable: POSTMAN_COLLECTION_ID → 52855131-45c30eca-2f8c-4992-b367-ae953951e0d0
+      - name: Update Postman collection via API
+        run: |
+          python3 -c "
+          import json
+          col = json.load(open('/tmp/collection-raw.json'))
+          json.dump({'collection': col}, open('/tmp/collection-wrapped.json', 'w'))
+          "
+
+          HTTP_STATUS=$(curl --silent --output /tmp/collection-response.json --write-out "%{http_code}" \
+            -X PUT "https://api.postman.com/collections/${{ vars.POSTMAN_COLLECTION_ID }}" \
+            -H "x-api-key: ${{ secrets.POSTMAN_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d @/tmp/collection-wrapped.json)
+
+          echo "Collection update response (HTTP $HTTP_STATUS):"
+          cat /tmp/collection-response.json
+
+          if [ "$HTTP_STATUS" -lt 200 ] || [ "$HTTP_STATUS" -ge 300 ]; then
+            echo "ERROR: Collection update returned HTTP $HTTP_STATUS"
+            exit 1
+          fi
+
+      # ── Step 5: Convert v2.1 JSON → v3 YAML folder format ───────────────────
+      # Installs the Postman CLI and runs `postman collection migrate` to produce
+      # the per-request YAML structure that Postman uses for native Git sync.
+      - name: Install Postman CLI
+        run: curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+      - name: Migrate collection to v3 YAML format
+        run: |
+          # Remove the existing v3 folder so migrate writes a clean copy
+          rm -rf postman/collections/Leap\ Matters\ API
+          postman collection migrate /tmp/collection-raw.json \
+            --output postman/collections
+
+      # ── Step 6: Commit generated spec + v3 collection back to repo ───────────
+      - name: Commit updated spec and collection to repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add postman/specs/leap-matters-api.yaml
+          git add postman/collections/
+          git diff --staged --quiet || \
+            git commit -m "chore: regenerate spec and collection from code [skip ci]"
+          git push
