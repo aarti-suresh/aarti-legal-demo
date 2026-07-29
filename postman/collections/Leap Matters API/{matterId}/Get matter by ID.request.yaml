@@ -1,5 +1,5 @@
 $kind: http-request
-id: f444432b-8afe-484a-b3f7-b8a1b993208f
+id: 54a63ea0-f25f-4b00-a957-9385da557da7
 description: Retrieves the full details of a legal matter identified by its unique matter ID. Supports all matter types including Conveyancing, Family, Commercial, and more.
 url: "{{baseUrl}}/matters/:matterId"
 method: GET

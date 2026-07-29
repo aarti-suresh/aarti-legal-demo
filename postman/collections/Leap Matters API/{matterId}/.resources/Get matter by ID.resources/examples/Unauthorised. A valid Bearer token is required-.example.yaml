@@ -1,5 +1,5 @@
 $kind: http-example
-id: d697f966-c009-46ba-943c-6cad49046178
+id: c53a1f1d-f755-4963-8126-88b87c0d3e2d
 name: Unauthorised. A valid Bearer token is required.
 request:
   url: "{{baseUrl}}/matters/:matterId"
